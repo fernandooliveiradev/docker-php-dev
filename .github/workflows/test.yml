@@ -1,0 +1,58 @@
+name: Test Docker PHP Environment
+
+on:
+  push:
+    branches: [ main, master, develop ]
+  pull_request:
+    branches: [ main, master, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Create .env file
+      run: cp .env.example .env
+    
+    - name: Start Docker environment
+      run: |
+        docker-compose up -d
+        sleep 30
+    
+    - name: Test PHP service
+      run: |
+        docker-compose exec -T php php --version
+        docker-compose exec -T php php -m | grep -E "(pdo_mysql|mysqli|gd|zip|opcache|xml|curl|openssl|intl|bcmath|imagick)"
+    
+    - name: Test MySQL connection
+      run: |
+        docker-compose exec -T php php -r "
+        try {
+            \$pdo = new PDO('mysql:host=mysql;dbname=app_db;charset=utf8mb4', 'app_user', 'app_password');
+            echo 'MySQL connection successful';
+        } catch (Exception \$e) {
+            echo 'MySQL connection failed: ' . \$e->getMessage();
+            exit(1);
+        }
+        "
+    
+    - name: Test web server
+      run: |
+        curl -f http://localhost:8080 || exit 1
+        curl -f http://localhost:8081 || exit 1
+    
+    - name: Run comprehensive tests
+      run: |
+        docker-compose exec -T php php /var/www/html/test.php
+    
+    - name: Check container health
+      run: |
+        docker-compose ps
+        docker-compose logs --tail=50
+    
+    - name: Cleanup
+      if: always()
+      run: docker-compose down -v

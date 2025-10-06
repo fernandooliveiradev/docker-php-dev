@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐳 Ambiente Docker PHP - Documentação</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Highlight.js para syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #1c2128;
+            --bg-tertiary: #30363d;
+            --border-color: #484f58;
+            --text-primary: #ffffff;
+            --text-secondary: #c9d1d9;
+            --accent-color: #58a6ff;
+            --success-color: #3fb950;
+            --warning-color: #d29922;
+            --danger-color: #f85149;
+            --highlight-bg: #0d1117;
+            --card-bg: #161b22;
+            --code-bg: #0d1117;
+            --sidebar-bg: #0d1117;
+            --alert-bg: #21262d;
+            --alert-border: #58a6ff;
+            --alert-text: #ffffff;
+        }
+        
+        body {
+            background-color: var(--bg-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-weight: 400;
+        }
+        
+        .navbar {
+            background-color: var(--bg-secondary) !important;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .sidebar {
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+            padding: 1rem 0;
+        }
+        
+        .sidebar .nav-link {
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            margin: 0.25rem 1rem;
+            transition: all 0.2s ease;
+        }
+        
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
+            color: var(--text-primary);
+            background-color: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-color);
+        }
+        
+        .sidebar .nav-link i {
+            width: 20px;
+            margin-right: 0.75rem;
+        }
+        
+        .main-content {
+            padding: 2rem;
+        }
+        
+        .section {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.75rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .section h2 {
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .code-block {
+            background-color: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            position: relative;
+            overflow-x: auto;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+        
+        .code-block pre {
+            margin: 0;
+            color: var(--text-primary);
+        }
+        
+        .copy-btn {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.375rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .copy-btn:hover {
+            background-color: var(--accent-color);
+            color: var(--bg-primary);
+        }
+        
+        .alert-custom {
+            border: 1px solid var(--alert-border);
+            border-radius: 0.5rem;
+            padding: 1rem 1.5rem;
+            margin: 1rem 0;
+            color: var(--alert-text);
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+        
+        .alert-info {
+            background-color: var(--alert-bg);
+            border-left: 4px solid var(--accent-color);
+        }
+        
+        .alert-warning {
+            background-color: var(--alert-bg);
+            border-left: 4px solid var(--warning-color);
+        }
+        
+        .alert-success {
+            background-color: var(--alert-bg);
+            border-left: 4px solid var(--success-color);
+        }
+        
+        .alert strong {
+            color: var(--alert-text);
+            font-weight: 600;
+        }
+        
+        .alert i {
+            color: var(--alert-text);
+            margin-right: 0.5rem;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--alert-bg);
+            color: var(--success-color);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            border: 1px solid var(--alert-border);
+        }
+        
+        .status-indicator span {
+            color: var(--alert-text);
+            font-weight: 500;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--success-color);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .command-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .command-card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .command-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .command-card h5 {
+            color: var(--accent-color);
+            margin-bottom: 0.75rem;
+        }
+        
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+        
+        .tech-badge {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 2rem;
+            font-size: 0.875rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .tech-badge:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .table-dark {
+            --bs-table-bg: var(--bg-tertiary);
+            --bs-table-border-color: var(--border-color);
+        }
+        
+        .nav-tabs .nav-link {
+            color: var(--text-secondary);
+            border-color: var(--border-color);
+            background-color: transparent;
+        }
+        
+        .nav-tabs .nav-link.active {
+            color: var(--accent-color);
+            background-color: var(--bg-secondary);
+            border-color: var(--border-color) var(--border-color) var(--bg-secondary);
+        }
+        
+        .tab-content {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-top: none;
+            border-radius: 0 0 0.5rem 0.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                min-height: auto;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .section {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-docker"></i>
+                Ambiente Docker PHP
+            </a>
+            <div class="status-indicator ms-auto">
+                <div class="status-dot"></div>
+                <span>Ambiente Operacional</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2">
+                <div class="sidebar">
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" href="#inicio">
+                            <i class="bi bi-house"></i>
+                            Início
+                        </a>
+                        <a class="nav-link" href="#comandos">
+                            <i class="bi bi-terminal"></i>
+                            Comandos
+                        </a>
+                        <a class="nav-link" href="#configuracao">
+                            <i class="bi bi-gear"></i>
+                            Configuração
+                        </a>
+                        <a class="nav-link" href="#tecnologias">
+                            <i class="bi bi-stack"></i>
+                            Tecnologias
+                        </a>
+                        <a class="nav-link" href="#conexao">
+                            <i class="bi bi-database"></i>
+                            Conexão DB
+                        </a>
+                        <a class="nav-link" href="#dicas">
+                            <i class="bi bi-lightbulb"></i>
+                            Dicas
+                        </a>
+                        <a class="nav-link" href="#testes">
+                            <i class="bi bi-check-circle"></i>
+                            Testes
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10">
+                <div class="main-content">
+                    <!-- Seção Início -->
+                    <section id="inicio" class="section">
+                        <h2><i class="bi bi-house"></i> Ambiente Docker PHP</h2>
+                        
+                        <p class="lead">Ambiente de desenvolvimento completo com PHP 8.3, MySQL 8.0, Nginx e phpMyAdmin.</p>
+                        
+                        <div class="alert alert-success">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <strong>Status:</strong> Ambiente operacional e configurado
+                        </div>
+
+                        <div class="row mt-4">
+                            <div class="col-md-6">
+                                <h5><i class="bi bi-link-45deg"></i> Acessos Rápidos</h5>
+                                <ul class="list-unstyled">
+                                    <li><i class="bi bi-globe text-success"></i> <a href="http://localhost:8080" class="text-decoration-none">Aplicação PHP</a></li>
+                                    <li><i class="bi bi-database text-info"></i> <a href="http://localhost:8081" class="text-decoration-none">phpMyAdmin</a></li>
+                                    <li><i class="bi bi-file-text text-warning"></i> <a href="test.php" class="text-decoration-none">Executar Testes</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <h5><i class="bi bi-key"></i> Credenciais</h5>
+                                <ul class="list-unstyled">
+                                    <li><strong>MySQL Root:</strong> root / root123</li>
+                                    <li><strong>MySQL App:</strong> app_user / app_password</li>
+                                    <li><strong>Database:</strong> app_db</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Seção Comandos -->
+                    <section id="comandos" class="section">
+                        <h2><i class="bi bi-terminal"></i> Comandos</h2>
+                        
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>Dica:</strong> Use o script <code>./start.sh</code> para gerenciamento simplificado
+                        </div>
+
+                        <ul class="nav nav-tabs" id="commandTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="docker-tab" data-bs-toggle="tab" data-bs-target="#docker" type="button">Docker</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="script-tab" data-bs-toggle="tab" data-bs-target="#script" type="button">Scripts</button>
+                            </li>
+                        </ul>
+                        
+                        <div class="tab-content" id="commandTabContent">
+                            <div class="tab-pane fade show active" id="docker" role="tabpanel">
+                                <h5>Comandos Docker</h5>
+                                <div class="code-block">
+                                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                                    <pre><code class="bash"># Iniciar ambiente
+docker-compose up -d
+
+# Parar ambiente
+docker-compose down
+
+# Reiniciar ambiente
+docker-compose restart
+
+# Ver status
+docker-compose ps
+
+# Ver logs
+docker-compose logs -f
+
+# Executar testes
+docker-compose exec php php /var/www/html/test.php
+
+# Acessar terminal PHP
+docker-compose exec php sh
+
+# Acessar MySQL
+docker-compose exec mysql mysql -u app_user -p app_db
+
+# Limpar ambiente (CUIDADO: remove dados!)
+docker-compose down -v</code></pre>
+                                </div>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="script" role="tabpanel">
+                                <h5>Scripts de Gerenciamento</h5>
+                                <div class="code-block">
+                                    <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                                    <pre><code class="bash"># Primeira vez - configuração completa
+./init.sh
+
+# Tornar o script executável (apenas primeira vez)
+chmod +x start.sh
+
+# Executar script interativo
+./start.sh</code></pre>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Seção Configuração -->
+                    <section id="configuracao" class="section">
+                        <h2><i class="bi bi-gear"></i> Configuração</h2>
+                        
+                        <h5>1. Configurar Variáveis de Ambiente</h5>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                            <pre><code class="bash"># Copiar arquivo de exemplo
+cp .env.example .env
+
+# Editar configurações (opcional)
+nano .env</code></pre>
+                        </div>
+
+                        <h5>2. Personalizar Portas (se necessário)</h5>
+                        <p>Edite o arquivo <code>.env</code> para mudar as portas:</p>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                            <pre><code class="bash"># Exemplo de configuração no .env
+NGINX_PORT=8090
+PHPMYADMIN_PORT=8091
+MYSQL_PORT=3307</code></pre>
+                        </div>
+
+                        <h5>3. Iniciar o Ambiente</h5>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                            <pre><code class="bash"># Usando Docker diretamente
+docker-compose up -d
+
+# Ou usando o script interativo
+./start.sh</code></pre>
+                        </div>
+                    </section>
+
+                    <!-- Seção Tecnologias -->
+                    <section id="tecnologias" class="section">
+                        <h2><i class="bi bi-stack"></i> Tecnologias</h2>
+                        
+                        <div class="tech-stack">
+                            <div class="tech-badge">
+                                <i class="bi bi-php text-primary"></i>
+                                PHP 8.3
+                            </div>
+                            <div class="tech-badge">
+                                <i class="bi bi-database text-success"></i>
+                                MySQL 8.0
+                            </div>
+                            <div class="tech-badge">
+                                <i class="bi bi-server text-info"></i>
+                                Nginx
+                            </div>
+                            <div class="tech-badge">
+                                <i class="bi bi-speedometer2 text-warning"></i>
+                                phpMyAdmin
+                            </div>
+                            <div class="tech-badge">
+                                <i class="bi bi-bootstrap text-purple"></i>
+                                Bootstrap 5
+                            </div>
+                            <div class="tech-badge">
+                                <i class="bi bi-docker text-primary"></i>
+                                Docker
+                            </div>
+                        </div>
+
+                        <h5>Extensões PHP</h5>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> PDO MySQL</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> MySQLi</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> GD (Image Processing)</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> ZIP</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> OPcache</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> XML</li>
+                                </ul>
+                            </div>
+                            <div class="col-md-6">
+                                <ul>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> cURL</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> OpenSSL</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> Intl</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> Bcmath</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> Imagick</li>
+                                    <li><i class="bi bi-check-circle-fill text-success"></i> mbstring</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Seção Conexão DB -->
+                    <section id="conexao" class="section">
+                        <h2><i class="bi bi-database"></i> Conexão com Banco de Dados</h2>
+                        
+                        <h5>Configuração PDO (Recomendado)</h5>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                            <pre><code class="php"><?php
+try {
+    // Usando variáveis de ambiente
+    $host = $_ENV['MYSQL_HOST'] ?? 'mysql';
+    $dbname = $_ENV['MYSQL_DATABASE'] ?? 'app_db';
+    $user = $_ENV['MYSQL_USER'] ?? 'app_user';
+    $password = $_ENV['MYSQL_PASSWORD'] ?? 'app_password';
+    
+    $pdo = new PDO(
+        "mysql:host={$host};dbname={$dbname};charset=utf8mb4",
+        $user,
+        $password,
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+            PDO::ATTR_EMULATE_PREPARES => false,
+        ]
+    );
+    
+    echo "Conexão bem-sucedida!";
+    
+} catch (PDOException $e) {
+    echo "Erro de conexão: " . $e->getMessage();
+}
+?></code></pre>
+                        </div>
+
+                        <h5>Configuração MySQLi</h5>
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                            <pre><code class="php"><?php
+$mysqli = new mysqli('mysql', 'app_user', 'app_password', 'app_db');
+
+if ($mysqli->connect_error) {
+    die('Erro de conexão: ' . $mysqli->connect_error);
+}
+
+echo "Conexão bem-sucedida!";
+$mysqli->set_charset("utf8mb4");
+?></code></pre>
+                        </div>
+
+                        <h5>Estrutura do Banco</h5>
+                        <div class="table-responsive">
+                            <table class="table table-dark table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Tabela</th>
+                                        <th>Descrição</th>
+                                        <th>Dados Iniciais</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><code>users</code></td>
+                                        <td>Tabela de usuários do sistema</td>
+                                        <td>1 usuário admin (admin@example.com / admin123)</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>leads</code></td>
+                                        <td>Tabela de leads/exemplo</td>
+                                        <td>3 registros de exemplo</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+
+                    <!-- Seção Dicas -->
+                    <section id="dicas" class="section">
+                        <h2><i class="bi bi-lightbulb"></i> Dicas</h2>
+                        
+                        <div class="command-grid">
+                            <div class="command-card">
+                                <h5><i class="bi bi-lightning"></i> Início Rápido</h5>
+                                <p>Use <code>docker-compose up -d</code> para iniciar tudo rapidamente.</p>
+                            </div>
+                            
+                            <div class="command-card">
+                                <h5><i class="bi bi-bug"></i> Debug</h5>
+                                <p>Execute <code>docker-compose exec php php /var/www/html/test.php</code> para verificar funcionamento.</p>
+                            </div>
+                            
+                            <div class="command-card">
+                                <h5><i class="bi bi-arrow-repeat"></i> Reiniciar</h5>
+                                <p>Use <code>docker-compose restart</code> para reiniciar todos os serviços.</p>
+                            </div>
+                            
+                            <div class="command-card">
+                                <h5><i class="bi bi-eye"></i> Logs</h5>
+                                <p>Veja logs em tempo real com <code>docker-compose logs -f</code>.</p>
+                            </div>
+                        </div>
+
+                        <h5>Problemas Comuns</h5>
+                        
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong>Portas em uso:</strong> Se as portas padrão já estiverem em uso, edite o arquivo <code>.env</code> e mude as portas
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong>Permissões:</strong> Se tiver problemas de permissão, execute: <code>chmod +x start.sh</code>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <strong>Docker não encontrado:</strong> Certifique-se de que Docker e Docker Compose estão instalados e funcionando
+                        </div>
+                    </section>
+
+                    <!-- Seção Testes -->
+                    <section id="testes" class="section">
+                        <h2><i class="bi bi-check-circle"></i> Testes</h2>
+                        
+                        <p>Execute os testes para verificar o ambiente:</p>
+                        
+                        <div class="code-block">
+                            <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+                            <pre><code class="bash"># Executar testes completos
+docker-compose exec php php /var/www/html/test.php
+
+# Ou acessar diretamente via navegador
+curl http://localhost:8080/test.php</code></pre>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>Testes incluídos:</strong> Conexão MySQL, extensões PHP, UTF-8, GD, cURL, Imagick e mais
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <a href="test.php" class="btn btn-primary btn-lg">
+                                <i class="bi bi-play-circle-fill"></i>
+                                Testar Ambiente
+                            </a>
+                            <br><br>
+                            <small class="text-muted">OPcache é opcional (já vem no PHP 8.3+)</small>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <script>
+        // Inicializar highlight.js
+        hljs.highlightAll();
+        
+        // Função para copiar código
+        function copyCode(button) {
+            const codeBlock = button.parentElement.querySelector('code');
+            const text = codeBlock.textContent;
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copiado!';
+                button.style.backgroundColor = 'var(--success-color)';
+                button.style.color = 'white';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.backgroundColor = '';
+                    button.style.color = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('Erro ao copiar:', err);
+            });
+        }
+        
+        // Smooth scrolling para links da sidebar
+        document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Remover active de todos os links
+                document.querySelectorAll('.sidebar .nav-link').forEach(l => l.classList.remove('active'));
+                
+                // Adicionar active ao link clicado
+                this.classList.add('active');
+                
+                // Scroll suave
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+        
+        // Atualizar active link ao scroll
+        window.addEventListener('scroll', () => {
+            const sections = document.querySelectorAll('section');
+            const scrollPosition = window.scrollY + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.sidebar .nav-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        });
+        
+        // Animação de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

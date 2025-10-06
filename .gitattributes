@@ -1,0 +1,69 @@
+# Configurações do Git para este projeto
+
+# Forçar LF em todos os arquivos de texto
+* text=auto eol=lf
+
+# Arquivos de configuração
+*.conf text
+*.ini text
+*.yml text
+*.yaml text
+*.json text
+*.xml text
+
+# Scripts
+*.sh text eol=lf
+*.bash text eol=lf
+init.sh text eol=lf
+start.sh text eol=lf
+
+# Código fonte
+*.php text
+*.js text
+*.css text
+*.html text
+*.sql text
+
+# Documentação
+*.md text
+*.txt text
+LICENSE text
+
+# Makefiles
+Makefile text
+makefile text
+
+# Arquivos binários (não devem ser modificados)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.tar binary
+*.gz binary
+
+# Arquivos Docker
+Dockerfile text
+*.dockerfile text
+docker-compose.yml text
+docker-compose.yaml text
+
+# Arquivos de ambiente (não devem ser commitados)
+.env export-ignore
+.env.local export-ignore
+.env.*.local export-ignore
+*.log export-ignore
+*.cache export-ignore
+*.tmp export-ignore
+*.temp export-ignore
+
+# Diretórios que não devem ser commitados
+/vendor/ export-ignore
+/node_modules/ export-ignore
+/.idea/ export-ignore
+/.vscode/ export-ignore
+/mysql_data/ export-ignore
+/logs/ export-ignore
+/uploads/ export-ignore

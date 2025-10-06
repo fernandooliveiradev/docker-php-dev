@@ -1,0 +1,84 @@
+# Arquivos de ambiente (NUNCA COMMITAR!)
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Dados do MySQL (NUNCA COMMITAR!)
+mysql_data/
+/var/lib/mysql/
+*.sql.backup
+
+# Logs
+*.log
+logs/
+/var/log/
+
+# Cache e temporários
+.DS_Store
+Thumbs.db
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+*.cache
+session/
+
+# IDEs e editores (NÃO COMMITAR CONFIGURAÇÕES PESSOAIS)
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.settings/
+*.iml
+
+# Dependências e vendors (se usar Composer no futuro)
+vendor/
+composer.lock
+composer.phar
+
+# Arquivos de upload (se criar diretório no futuro)
+uploads/
+temp/
+public/uploads/
+
+# Docker
+.docker/
+docker-compose.override.yml
+
+# PHP
+*.cache
+session/
+*.session
+
+# Backup
+*.backup
+*.bak
+*~
+
+# Certificados e chaves privadas (NUNCA COMMITAR!)
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Arquivos de sistema
+.DS_Store?
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Arquivos de teste locais
+test-local.php
+debug.php
+info.php
+phpinfo.php
+
+# Cache de navegador
+*.tsbuildinfo
+
+# Arquivos do ambiente Docker
+*.env
